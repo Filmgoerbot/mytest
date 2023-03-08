@@ -1,4 +1,4 @@
-name: Node.js API
+name: Node.js Action
 env:
   NODE_ENV: production
 build:
