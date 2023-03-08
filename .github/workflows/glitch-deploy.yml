@@ -17,4 +17,3 @@ jobs:
             --token=${{ secrets.GLITCH_TOKEN }}
             --repo=${{ secrets.GLITCH_REPO }}
             --branch=main
-            --domain=${{ secrets.GLITCH_DOMAIN }}
