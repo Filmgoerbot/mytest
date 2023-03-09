@@ -9,6 +9,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -25,7 +29,5 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/my-test-app:latest
-
       - name: Render GitHub Action
         uses: Bounceapp/render-action@0.6.0
-
