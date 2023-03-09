@@ -1,0 +1,9 @@
+# Documentation
+README.md
+
+# Project Dependencies
+node_modules
+
+# Docker
+Dockerfile
+.dockerignore
