@@ -31,11 +31,12 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/my-test-app:latest
 
       - name: Wait for Render Deployment
-        uses: bounceapp/render-action@0.6.0
+        uses: renderapp/deploy-action@1.7.1
         with:
           render-token: ${{ secrets.RENDER_TOKEN }}
           github-token: ${{ secrets.HUB_TOKEN }}
           service-id: srv-cg4nhi02qv287cq05a90
+          render_yaml: render.yaml
           retries: 20
           wait: 16000
           sleep: 30000

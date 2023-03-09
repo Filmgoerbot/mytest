@@ -1,0 +1,5 @@
+name: my-test-app
+type: web
+dockerfile: Dockerfile
+build_command: npm install && npm run build
+start_command: npm start
