@@ -9,6 +9,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -41,4 +45,3 @@ jobs:
           service-id: srv-xxxxxxxxxxxxxxxxxxxx
           retries: 20
           wait: 16000
-
