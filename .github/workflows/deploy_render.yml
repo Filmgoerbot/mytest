@@ -1,14 +1,9 @@
 name: Deploy to Render
 on:
-  workflow_run:
-    workflows:
-      - Docker Build
-    types:
-      - completed
   push:
     branches:
       - main
-
+  workflow_dispatch:
 jobs:
   on-success:
     runs-on: ubuntu-latest
@@ -16,7 +11,7 @@ jobs:
       - name: Print success message
         run: echo "Deployment successful!"
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'push' }}
     name: Wait for Deploy
     runs-on: ubuntu-latest
     steps:
@@ -30,7 +25,7 @@ jobs:
           wait: 16000
   on-failure:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    if: ${{ github.event_name == 'push' }}
     steps:
       - name: Abruptly end the workflow
         run: exit 1
