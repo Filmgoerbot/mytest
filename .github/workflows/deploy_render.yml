@@ -21,8 +21,8 @@ jobs:
           render-token: ${{ secrets.RENDER_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           service-id: srv-cg4nhi02qv287cq05a90
-          retries: 20
-          wait: 16000
+          retries: 40
+          wait: 20000
   on-failure:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
