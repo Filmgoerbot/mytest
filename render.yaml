@@ -1,8 +1,10 @@
 services:
   - type: web
+    name: Deploy Render
+    env: node
+    plan: free
     buildCommand: docker build -t my-test-app .
     startCommand: docker run -p 3000:8080 my-test-app
     healthCheckPath: /
     env:
-      - name: nodejs14.x
-        value: production
+      NODE_ENV: production
