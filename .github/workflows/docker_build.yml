@@ -56,24 +56,32 @@ jobs:
           NODE_VERSION=${{ matrix.node-version }}
 
   merge-branch:
+    needs: build-and-deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Create Branch
+        run: |
+          git config --global user.email "youremail@example.com"
+          git config --global user.name "Your Name"
+          git checkout -b feature-branch
+          # Make changes to code
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.HUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Merge feature-branch into main"
           title: "Merge feature-branch into main"
           body: "This pull request merges feature-branch into main."
-          branch: master
-          base: main
+          branch: main
+          base: feature-branch
 
       - name: Merge Branch
         uses: peter-evans/merge-pull-request@v3
         with:
-          token: ${{ secrets.HUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
           merge-method: merge
