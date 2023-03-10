@@ -56,23 +56,41 @@ jobs:
           NODE_VERSION=${{ matrix.node-version }}
 
   create-pull-request:
-  needs: build-and-deploy
-  runs-on: ubuntu-latest
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
 
-  env:
-    GITHUB_TOKEN: ${{ secrets.HUB_TOKEN }}
-    SOURCE_BRANCH: main
-    TARGET_BRANCH: master
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SOURCE_BRANCH: main
+      TARGET_BRANCH: master
 
-  steps:
+    steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        ref: ${{ env.SOURCE_BRANCH }}
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
-        head: ${{ env.SOURCE_BRANCH }}
+        branch: ${{ env.SOURCE_BRANCH }}
         base: ${{ env.TARGET_BRANCH }}
         title: "Deploy latest changes"
         body: "Automatically deployed the latest changes using GitHub Actions."
         commit-message: "Deploy latest changes"
+
+  merge-to-master:
+    needs: create-pull-request
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+    - name: Merge pull request to master
+      uses: peter-evans/merge-pull-request@v1.0.1
+      with:
+        github-token: ${{ env.GITHUB_TOKEN }}
+        pull-request-number: ${{ github.event.pull_request.number }}
+        merge-method: squash
