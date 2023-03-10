@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.HUB_TOKEN }}
       SOURCE_BRANCH: main
       TARGET_BRANCH: master
 
@@ -85,12 +85,12 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
 
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.HUB_TOKEN }}
 
     steps:
     - name: Merge pull request to master
       uses: peter-evans/merge-pull-request@v1.0.1
       with:
-        github-token: ${{ env.GITHUB_TOKEN }}
+        github-token: ${{ env.HUB_TOKEN }}
         pull-request-number: ${{ github.event.pull_request.number }}
         merge-method: squash
