@@ -7,3 +7,5 @@ services:
     env:
       - name: NODE_ENV
         value: production
+    file:
+      Runtime: nodejs14.x
