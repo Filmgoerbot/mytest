@@ -61,7 +61,8 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.HUB_TOKEN }}
-      TARGET_BRANCH: main
+      SOURCE_BRANCH: main
+      TARGET_BRANCH: master
 
     steps:
     - name: Checkout code
@@ -70,7 +71,7 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
+        branch: ${{ env.SOURCE_BRANCH }}
         base: ${{ env.TARGET_BRANCH }}
-        title: "Deploy latest changes"
         body: "Automatically deployed the latest changes using GitHub Actions."
         commit-message: "Deploy latest changes"
