@@ -1,6 +1,5 @@
 services:
   - type: web
-    name: Render Deploy
     buildCommand: docker build -t my-test-app .
     startCommand: docker run -p 3000:8080 my-test-app
     healthCheckPath: /
