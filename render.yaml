@@ -4,7 +4,5 @@ services:
     startCommand: docker run -p 3000:8080 my-test-app
     healthCheckPath: /
     env:
-      - name: NODE_ENV
+      - name: nodejs14.x
         value: production
-    file:
-      Runtime: nodejs14.x
