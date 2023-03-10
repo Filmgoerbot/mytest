@@ -55,42 +55,25 @@ jobs:
         build-args: |
           NODE_VERSION=${{ matrix.node-version }}
 
-  create-pull-request:
-    needs: build-and-deploy
+  merge-branch:
     runs-on: ubuntu-latest
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.HUB_TOKEN }}
-      SOURCE_BRANCH: main
-      TARGET_BRANCH: master
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ env.SOURCE_BRANCH }}
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v3
-      with:
-        branch: ${{ env.SOURCE_BRANCH }}
-        base: ${{ env.TARGET_BRANCH }}
-        title: "Deploy latest changes"
-        body: "Automatically deployed the latest changes using GitHub Actions."
-        commit-message: "Deploy latest changes"
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.HUB_TOKEN }}
+          commit-message: "Merge feature-branch into main"
+          title: "Merge feature-branch into main"
+          body: "This pull request merges feature-branch into main."
+          branch: master
+          base: main
 
-  merge-to-master:
-    needs: create-pull-request
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.HUB_TOKEN }}
-
-    steps:
-    - name: Merge pull request to master
-      uses: peter-evans/merge-pull-request@v1.0.1
-      with:
-        github-token: ${{ env.HUB_TOKEN }}
-        pull-request-number: ${{ github.event.pull_request.number }}
-        merge-method: squash
+      - name: Merge Branch
+        uses: peter-evans/merge-pull-request@v3
+        with:
+          token: ${{ secrets.HUB_TOKEN }}
+          pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
+          merge-method: merge
