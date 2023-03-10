@@ -55,23 +55,39 @@ jobs:
         build-args: |
           NODE_VERSION=${{ matrix.node-version }}
 
-  create-pull-request:
-    needs: build-and-deploy
+  create-pr:
     runs-on: ubuntu-latest
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.HUB_TOKEN }}
-      SOURCE_BRANCH: main
-      TARGET_BRANCH: master
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: 'Merge main to master'
+          head: main
+          base: master
+          body: |
+            **Changes:**
+            - ${{ github.event.head_commit.message }}
+            **Deploy Notes:**
+            N/A
+            **Post Deploy Test Instructions:**
+            1. Do this
+            2. Do that
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v3
-      with:
-        branch: ${{ env.SOURCE_BRANCH }}
-        base: ${{ env.TARGET_BRANCH }}
-        body: "Automatically deployed the latest changes using GitHub Actions."
-        commit-message: "Deploy latest changes"
+  merge-to-master:
+    runs-on: ubuntu-latest
+    needs: create-pr
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: 'master'
+      - name: Merge branch
+        uses: peter-evans/merge-pull-request@v1
+        with:
+          pull-number: ${{ github.event.pull_request.number }}
+          merge-method: 'squash'
+        env:
+          GITHUB_TOKEN: ${{ secrets.HUB_TOKEN }}
