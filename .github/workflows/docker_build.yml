@@ -66,16 +66,8 @@ jobs:
         uses: peter-evans/create-pull-request@v4.2.3
         with:
           token: ${{ secrets.HUB_TOKEN }}
-          commit-message: "Merge feature-branch into main"
-          title: "Merge feature-branch into main"
-          body: "This pull request merges feature-branch into main."
+          commit-message: "Merge main to master"
+          title: "Merge main to master"
+          body: "This pull request merges main to master."
           branch: master
           base: main
-
-      - name: Enable Pull Request Automerge
-        if: steps.cpr.outputs.pull-request-operation == 'created'
-        uses: peter-evans/enable-pull-request-automerge@v2
-        with:
-          token: ${{ secrets.HUB_TOKEN }}
-          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-          merge-method: merge
